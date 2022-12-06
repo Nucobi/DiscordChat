@@ -1,0 +1,17 @@
+bot_token: "" # 여기에 디스코드 봇 토큰을 입력해 주세요.
+default_channel: "test" # 기본적으로 채팅이 출력될 채널입니다.
+register_timelimit: 60000 # 계정 등록 시 비밀번호 입력 제한시간입니다. 단위는 밀리초입니다.(1000 = 1초)
+activate_generator: false # 음성 채널 생성기 활성화 여부입니다.
+generator_name: "Voicechat Generator" # 음성 채널 생성기 이름을 설정합니다.
+generator_category: "" # 해당 카테고리에 음성 채널 생성기를 생성합니다. 아무것도 적지 않으면 카테고리 없이 생성됩니다.
+generated_prefix: "" # 생성될 음성 채널의 이름을 설정합니다. (ex: 채널 -> 채널1,채널2,..)
+join_leave_channel: "" # 접속,접속 해제 시 메시지를 보낼 채널을 설정합니다.
+advancement_notice: false # 발전 과제 달성 시 디스코드에서 알림을 줄지 여부를 설정합니다.
+advancement_title: "" # 발전 과제 임베드 제목입니다.
+advancement_message: "" # 발전 과제 임베드 내용입니다. {0}은 플레이어 이름, {1}은 발전 과제 제목입니다.
+advancement_channel: "" # 발전 과제 알림 채널입니다.
+advancement_comment:
+  # 코멘트 리스트. 위에서부터 Challenge,Goal,Normal 입니다.
+  - "축하드립니다!"
+  - "잘하셨어요!"
+  - ""
