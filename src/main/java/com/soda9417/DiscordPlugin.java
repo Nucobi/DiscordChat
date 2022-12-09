@@ -152,7 +152,8 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
     // <Event Handle>
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        Bukkit.getScheduler().callSyncMethod( this, () -> event.getPlayer().performCommand("discordMessage "+event.getMessage()) );
+        String original_message = event.getMessage();
+        Bukkit.getScheduler().callSyncMethod( this, () -> event.getPlayer().performCommand("discordMessage "+original_message) );
         StringBuilder rawmessage = Bot_Listener.mentionEffectText(event.getMessage(),Bot_Listener.recentEvent,false);
         String msg = ChatColor.translateAlternateColorCodes('&',rawmessage.toString());
         event.setMessage(msg);
