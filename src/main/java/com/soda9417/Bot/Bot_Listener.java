@@ -229,7 +229,7 @@ public class Bot_Listener extends ListenerAdapter {
                 if (isListener) messageSplit = color + messageSplit;
                 message.append(messageSplit);
             }
-            if (isListener && (rawMsgSplit.startsWith("@") || rawMsgSplit.startsWith("<@"))) message.append(ChatColor.RESET);
+            if ((rawMsgSplit.startsWith("@") || rawMsgSplit.startsWith("<@"))) message.append(ChatColor.RESET);
             message.append(" ");
         }
         return message;
