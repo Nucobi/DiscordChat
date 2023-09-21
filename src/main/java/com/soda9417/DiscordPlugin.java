@@ -18,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,6 +42,9 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
     public static String GeneratorName = "";
     public static String DEFAULT_CHANNEL = "";
     public static String JOIN_LEAVE_CHANNEL = "";
+    public static String SERVER_STATUS_CHANNEL = "";
+    public static String SERVER_ONLINE_NAME = "";
+    public static String SERVER_OFFLINE_NAME = "";
     public static Boolean ACTIVATE_GENERATOR = false;
     public static Boolean ADVANCEMENT_NOTICE = false;
 
@@ -83,6 +87,9 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
         ADVANCEMENT_NOTICE = config.getBoolean("advancement_notice");
         Account.TIMELIMIT = config.getInt("register_timelimit");
         Bot_Listener.PREFIX = config.getString("generated_prefix");
+        SERVER_STATUS_CHANNEL = config.getString("server_status_channel");
+        SERVER_ONLINE_NAME = config.getString("server_online_name");
+        SERVER_OFFLINE_NAME = config.getString("server_offline_name");
 
         // Build JDA
         JDABuilder builder = JDABuilder.create(DISCORD_TOKEN,GatewayIntent.GUILD_VOICE_STATES,GatewayIntent.GUILD_MESSAGES,GatewayIntent.MESSAGE_CONTENT,GatewayIntent.GUILD_MEMBERS,GatewayIntent.GUILD_MESSAGE_TYPING);
@@ -97,6 +104,7 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
             e.printStackTrace();
             isErrorOnBot = true;
         }
+
 
         // Plugin Register
 
@@ -123,9 +131,10 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
             sender.sendMessage(ChatColor.RED+String.format("[%s] Error Occured during loading bot.",PLUGIN_NAME));
         }
         else{
+            TextChannel StateChannel = jda.getTextChannelById(SERVER_STATUS_CHANNEL);
+            if (StateChannel != null) StateChannel.getManager().setName(SERVER_ONLINE_NAME);
             sender.sendMessage(ChatColor.YELLOW+String.format("[%s] Plugin Activated Succesfully.",PLUGIN_NAME));
         }
-
     }
 
     @Override
@@ -145,25 +154,27 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
             }
         }
 
+        TextChannel StateChannel = jda.getTextChannelById(SERVER_STATUS_CHANNEL);
+        if (StateChannel != null) StateChannel.getManager().setName(SERVER_OFFLINE_NAME);
+
         sender.sendMessage(ChatColor.GOLD + String.format("[%s] Deactivated.",PLUGIN_NAME));
     }
 
 
     // <Event Handle>
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent event) {
         String original_message = event.getMessage();
-        Bukkit.getScheduler().callSyncMethod( this, () -> event.getPlayer().performCommand("discordMessage "+original_message) );
         StringBuilder rawmessage = Bot_Listener.mentionEffectText(event.getMessage(),Bot_Listener.recentEvent,false);
         String msg = ChatColor.translateAlternateColorCodes('&',rawmessage.toString());
         event.setMessage(msg);
+        Bukkit.getScheduler().callSyncMethod( this, () -> event.getPlayer().performCommand("discordMessage "+original_message) );
     }
 
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        String playerName = event.getPlayer().getDisplayName();
-        event.setJoinMessage(ChatColor.translateAlternateColorCodes('&',"[&a+&r] ")+playerName);
+        String playerName = event.getPlayer().getName();
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(new Color(0,255,0));

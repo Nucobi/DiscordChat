@@ -150,7 +150,7 @@ public class Bot_Listener extends ListenerAdapter {
 
 
         // Generate Format
-        String messageFormat = String.format(color +"[%s] %s",
+        String messageFormat = String.format(color +"%s"+ ChatColor.GRAY + ":" + ChatColor.WHITE + " %s",
                 event.getMember().getEffectiveName(),
                 message);
 

@@ -6,6 +6,9 @@ generator_name: "Voicechat Generator" # 음성 채널 생성기 이름을 설정
 generator_category: "" # 해당 카테고리에 음성 채널 생성기를 생성합니다. 아무것도 적지 않으면 카테고리 없이 생성됩니다.
 generated_prefix: "" # 생성될 음성 채널의 이름을 설정합니다. (ex: 채널 -> 채널1,채널2,..)
 join_leave_channel: "" # 접속,접속 해제 시 메시지를 보낼 채널을 설정합니다.
+server_status_channel: "" # 서버 상태를 알릴 채널입니다. 주의: ID로 작성하셔야 합니다!!
+server_online_name: "" # 서버가 온라인일 때, 서버 상태 채널의 이름이 이것이 됩니다.
+server_offline_name: "" # 서버가 오프라인일 때, 서버 상태 채널의 이름이 이것이 됩니다.
 advancement_notice: false # 발전 과제 달성 시 디스코드에서 알림을 줄지 여부를 설정합니다.
 advancement_title: "" # 발전 과제 임베드 제목입니다.
 advancement_message: "" # 발전 과제 임베드 내용입니다. {0}은 플레이어 이름, {1}은 발전 과제 제목입니다.

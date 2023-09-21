@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.utils.concurrent.Task;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,7 +42,7 @@ public class UserMention implements CommandExecutor {
         StringBuilder message = new StringBuilder();
 
         for (String arg : args) {
-            if (arg.startsWith("<@") && arg.endsWith(">")){
+            if (arg.startsWith("<@") && arg.endsWith(">")) {
                 String username = arg;
                 username = username.replaceAll("[@<>]","");
 
@@ -72,11 +74,8 @@ public class UserMention implements CommandExecutor {
         String msg = message.toString();
         String rawmsg = rawMessage.toString();
 
-        System.out.println(msg);
-        System.out.println(rawmsg);
-
         for (TextChannel channel : textChannels) {
-            channel.sendMessage("["+p.getName()+"]  " + msg).queue();
+            channel.sendMessage(ChatColor.AQUA + p.getName() + ChatColor.WHITE + ":  " + msg).queue();
         }
         return true;
     }
