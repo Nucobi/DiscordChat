@@ -40,6 +40,14 @@ public class Bot_Listener extends ListenerAdapter {
     static ChatColor account_mention = ChatColor.AQUA;
     @Override
     public void onReady(@NotNull ReadyEvent event) {
+        TextChannel StateChannel = jda.getTextChannelById(SERVER_STATUS_CHANNEL);
+        if (StateChannel != null) {
+            StateChannel.getManager().setName(SERVER_ONLINE_NAME).queue();
+            Role ServerStatRole = jda.getRoleById(SERVER_NOTICE_ROLE);
+            if (ServerStatRole != null) {
+                StateChannel.sendMessage(":green_circle: 서버가 열렸습니다! <@&"+ServerStatRole.getId()+">").queue();
+            }
+        }
         for (Guild guild : jda.getGuilds()) {
             if (!ACTIVATE_GENERATOR) {
                 System.out.println("음성 채널 생성기가 비활성 상태입니다.");
@@ -150,7 +158,7 @@ public class Bot_Listener extends ListenerAdapter {
 
 
         // Generate Format
-        String messageFormat = String.format(color +"%s"+ ChatColor.GRAY + ":" + ChatColor.WHITE + " %s",
+        String messageFormat = String.format(ChatColor.AQUA +"%s"+ ChatColor.GRAY + ":" + color + " %s",
                 event.getMember().getEffectiveName(),
                 message);
 

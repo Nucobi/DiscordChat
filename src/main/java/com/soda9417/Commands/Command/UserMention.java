@@ -75,7 +75,7 @@ public class UserMention implements CommandExecutor {
         String rawmsg = rawMessage.toString();
 
         for (TextChannel channel : textChannels) {
-            channel.sendMessage(ChatColor.AQUA + p.getName() + ChatColor.WHITE + ":  " + msg).queue();
+            channel.sendMessage( p.getName() +  ":  " + msg).queue();
         }
         return true;
     }

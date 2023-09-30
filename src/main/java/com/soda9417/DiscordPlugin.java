@@ -42,9 +42,10 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
     public static String GeneratorName = "";
     public static String DEFAULT_CHANNEL = "";
     public static String JOIN_LEAVE_CHANNEL = "";
-    public static String SERVER_STATUS_CHANNEL = "";
+    public static Long SERVER_STATUS_CHANNEL = 0L;
     public static String SERVER_ONLINE_NAME = "";
     public static String SERVER_OFFLINE_NAME = "";
+    public static String SERVER_NOTICE_ROLE = "";
     public static Boolean ACTIVATE_GENERATOR = false;
     public static Boolean ADVANCEMENT_NOTICE = false;
 
@@ -87,9 +88,15 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
         ADVANCEMENT_NOTICE = config.getBoolean("advancement_notice");
         Account.TIMELIMIT = config.getInt("register_timelimit");
         Bot_Listener.PREFIX = config.getString("generated_prefix");
-        SERVER_STATUS_CHANNEL = config.getString("server_status_channel");
+        SERVER_STATUS_CHANNEL = config.getLong("server_status_channel");
         SERVER_ONLINE_NAME = config.getString("server_online_name");
         SERVER_OFFLINE_NAME = config.getString("server_offline_name");
+        SERVER_NOTICE_ROLE = config.getString("server_notice_role");
+
+        isChannelLimited = config.getBoolean("limit_channel");
+        if (config.getList("limit_channel_list") != null) {
+            limitedChannel = new ArrayList(config.getList("limit_channel_list"));
+        }
 
         // Build JDA
         JDABuilder builder = JDABuilder.create(DISCORD_TOKEN,GatewayIntent.GUILD_VOICE_STATES,GatewayIntent.GUILD_MESSAGES,GatewayIntent.MESSAGE_CONTENT,GatewayIntent.GUILD_MEMBERS,GatewayIntent.GUILD_MESSAGE_TYPING);
@@ -131,8 +138,6 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
             sender.sendMessage(ChatColor.RED+String.format("[%s] Error Occured during loading bot.",PLUGIN_NAME));
         }
         else{
-            TextChannel StateChannel = jda.getTextChannelById(SERVER_STATUS_CHANNEL);
-            if (StateChannel != null) StateChannel.getManager().setName(SERVER_ONLINE_NAME);
             sender.sendMessage(ChatColor.YELLOW+String.format("[%s] Plugin Activated Succesfully.",PLUGIN_NAME));
         }
     }
@@ -155,8 +160,13 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
         }
 
         TextChannel StateChannel = jda.getTextChannelById(SERVER_STATUS_CHANNEL);
-        if (StateChannel != null) StateChannel.getManager().setName(SERVER_OFFLINE_NAME);
-
+        if (StateChannel != null) {
+            StateChannel.getManager().setName(SERVER_OFFLINE_NAME).queue();
+            Role ServerStatRole = jda.getRoleById(SERVER_NOTICE_ROLE);
+            if (ServerStatRole != null) {
+                StateChannel.sendMessage(":red_circle: 서버가 닫혔습니다. <@&" + ServerStatRole.getId() + ">").queue();
+            }
+        }
         sender.sendMessage(ChatColor.GOLD + String.format("[%s] Deactivated.",PLUGIN_NAME));
     }
 
@@ -188,8 +198,7 @@ public final class DiscordPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        String playerName = event.getPlayer().getDisplayName();
-        event.setQuitMessage(ChatColor.translateAlternateColorCodes('&',"[&c-&r] ")+playerName);
+        String playerName = event.getPlayer().getName();
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(new Color(255,0,0));
