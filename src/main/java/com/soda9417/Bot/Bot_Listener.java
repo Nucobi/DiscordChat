@@ -273,8 +273,8 @@ public class Bot_Listener extends ListenerAdapter {
                         for (Category category : guild.getCategories()) {
                             if (category.getName().equalsIgnoreCase(parent))
                                try {
-                                    RestAction<VoiceChannel> gay = guild.createVoiceChannel(chanName, category);
-                                    gay.complete();
+                                    RestAction<VoiceChannel> gvc = guild.createVoiceChannel(chanName, category);
+                                    gvc.complete();
                                     for(VoiceChannel vc : category.getVoiceChannels()) {
                                         if (vc.getName().equals(chanName)) {
                                             Bot_Made_VoiceChannel.put(chanName,vc.getId());
@@ -285,7 +285,7 @@ public class Bot_Listener extends ListenerAdapter {
                                 }
                                 catch (Throwable t) {
                                     t.printStackTrace();
-                                    System.out.println("해당 이름의 부모가 존재하지 않는다던데");
+                                    System.out.println("해당 이름의 카테고리가 존재하지 않습니다.");
                                     return false;
                                 }
                         }
@@ -296,8 +296,8 @@ public class Bot_Listener extends ListenerAdapter {
                     }
                     else if (coms.length >= 3 && value.startsWith("\"") && value.endsWith("\"")) {
                         String chanName = value.replace("\"","");
-                        ChannelAction<VoiceChannel> gay = guild.createVoiceChannel(chanName);
-                        gay.complete();
+                        ChannelAction<VoiceChannel> gvc = guild.createVoiceChannel(chanName);
+                        gvc.complete();
                         for (VoiceChannel vc : guild.getVoiceChannels()) {
                             if (vc.getName().equalsIgnoreCase(chanName)) {
                                 Bot_Made_VoiceChannel.put(chanName, vc.getId());
@@ -313,7 +313,6 @@ public class Bot_Listener extends ListenerAdapter {
                     if (dvalue.startsWith("\"") && dvalue.endsWith("\"")) {
                         String chanName = dvalue.replace("\"","");
                         if (!Bot_Made_VoiceChannel.containsKey(chanName)){
-                            // 이 채널은 봇이 안만듬 ㅅㄱ
                             event.getMessage().reply("> 해당 채널은 봇이 생성한 채널이 아닙니다.").queue();
                             return false;
                         }
